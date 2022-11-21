@@ -36,4 +36,4 @@ jobs:
       run: |
         kubectl get nodes
         kubectl get ns
-        kubectl kustomize -k yaml/installation/
+        kubectl kustomize yaml/installation/
