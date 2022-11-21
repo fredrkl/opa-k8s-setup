@@ -1,3 +1,5 @@
 resources:
 - opa.yaml
 - ui.yaml
+
+namespace: gatekeeper-system
