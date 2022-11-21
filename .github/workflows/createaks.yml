@@ -23,5 +23,5 @@ jobs:
       with:
         azcliversion: 2.30.0
         inlineScript: |
-          az group create ${{ env.CLUSTER_NAME }}
+          az group create -l northeurope --name ${{ env.CLUSTER_NAME }}
           az aks create -g ${{ env.CLUSTER_NAME }} -n ${{ env.CLUSTER_NAME }} --generate-ssh-keys
