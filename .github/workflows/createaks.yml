@@ -23,5 +23,8 @@ jobs:
       with:
         azcliversion: 2.30.0
         inlineScript: |
+          az feature register --name AKS-KedaPreview --namespace Microsoft.ContainerService
+          echo "Should here wait untill az feature list -o table --query [?contains(name, 'Microsoft.ContainerService/AKS-KedaPreview')].{Name:name,State:properties.state} shows ready"
+          az provider register --namespace Microsoft.ContainerService
           az group create -l northeurope --name ${{ env.CLUSTER_NAME }}
-          az aks create -g ${{ env.CLUSTER_NAME }} -n ${{ env.CLUSTER_NAME }} --generate-ssh-keys
+          az aks create -g ${{ env.CLUSTER_NAME }} -n ${{ env.CLUSTER_NAME }} --generate-ssh-keys --enable-keda
