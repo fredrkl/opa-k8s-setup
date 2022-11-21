@@ -23,6 +23,7 @@ jobs:
       with:
         azcliversion: 2.30.0
         inlineScript: |
+          az extension add --upgrade --name aks-preview
           az feature register --name AKS-KedaPreview --namespace Microsoft.ContainerService
           echo "Should here wait untill az feature list -o table --query [?contains(name, 'Microsoft.ContainerService/AKS-KedaPreview')].{Name:name,State:properties.state} shows ready"
           az provider register --namespace Microsoft.ContainerService
