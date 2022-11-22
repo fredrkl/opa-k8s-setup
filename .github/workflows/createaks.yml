@@ -18,14 +18,24 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure CLI script
-      uses: azure/CLI@v1
+    - uses: azure/arm-deploy@v1
+      id: deploy
       with:
-        azcliversion: 2.30.0
-        inlineScript: |
-          az extension add --upgrade --name aks-preview
-          az feature register --name AKS-KedaPreview --namespace Microsoft.ContainerService
-          echo "Should here wait untill az feature list -o table --query [?contains(name, 'Microsoft.ContainerService/AKS-KedaPreview')].{Name:name,State:properties.state} shows ready"
-          az provider register --namespace Microsoft.ContainerService
-          az group create -l northeurope --name ${{ env.CLUSTER_NAME }}
-          az aks create -g ${{ env.CLUSTER_NAME }} -n ${{ env.CLUSTER_NAME }} --generate-ssh-keys --enable-keda
+        scope: subscription
+        region: northeurope
+        deploymentName: "Main-Deploy"
+        template: ./bicep/main.bicep
+        parameters: 'resourceGroupName=${{ env.CLUSTER_NAME }} clustername=${{ env.CLUSTER_NAME }} location=northeurope'
+        failOnStdErr: true 
+
+#    - name: Azure CLI script
+#      uses: azure/CLI@v1
+#      with:
+#        azcliversion: 2.30.0
+#        inlineScript: |
+#          az extension add --upgrade --name aks-preview
+#          az feature register --name AKS-KedaPreview --namespace Microsoft.ContainerService
+#          echo "Should here wait untill az feature list -o table --query [?contains(name, 'Microsoft.ContainerService/AKS-KedaPreview')].{Name:name,State:properties.state} shows ready"
+#          az provider register -n Microsoft.ContainerService
+#          az group create -l northeurope --name ${{ env.CLUSTER_NAME }}
+#          az aks create -g ${{ env.CLUSTER_NAME }} -n ${{ env.CLUSTER_NAME }} --generate-ssh-keys --enable-keda
